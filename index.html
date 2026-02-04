@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compatibility Quiz</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 100%; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: #333;
+        }
+        .quiz-container {
+            background: white; border-radius: 20px; padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;
+        }
+        h1 { text-align: center; color: #4a5568; margin-bottom: 10px; font-size: 1.8em; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 30px; font-size: 1.1em; }
+        .question { margin-bottom: 25px; }
+        .question h3 { color: #2d3748; margin-bottom: 15px; font-size: 1.3em; }
+        .option { display: block; margin: 10px 0; padding: 12px 15px; border: 2px solid #e2e8f0;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s; background: #f7fafc; }
+        .option:hover { border-color: #4299e1; background: #ebf8ff; transform: translateX(5px); }
+        .option input[type="radio"], .option input[type="checkbox"] { margin-right: 12px; transform: scale(1.2); }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1.1em;
+            font-weight: 600; transition: all 0.2s; margin: 10px 0;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(72,187,120,0.3); }
+        #results { display: none; text-align: center; font-size: 1.6em; font-weight: bold;
+            padding: 40px 20px; background: linear-gradient(135deg, #48bb78, #38a169); color: white;
+            border-radius: 15px; margin-top: 20px;
+        }
+        .hidden { display: none; }
+        .progress { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4299e1, #3182ce);
+            width: 20%; transition: width 0.3s;
+        }
+        @media (max-width: 480px) { body { padding: 10px; } .quiz-container { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Compatibility Quiz</h1>
+        <p class="subtitle">Find your perfect international match in 2 minutes</p>
+        
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+        
+        <form id="quizForm">
+            <div id="q1" class="question">
+                <h3>1️⃣ What's your ideal date?</h3>
+                <label class="option"><input type="radio" name="q1" value="A"> 🍽️ Dinner for two</label>
+                <label class="option"><input type="radio" name="q1" value="B"> 🎉 Party at a club</label>
+                <label class="option"><input type="radio" name="q1" value="C"> 📺 Watch movies at home</label>
+                <label class="option"><input type="radio" name="q1" value="D"> 🌳 A walk in the park</label>
+            </div>
+            
+            <div id="q2" class="question hidden">
+                <h3>2️⃣ What's important in a relationship? (Choose up to 3)</h3>
+                <label class="option"><input type="checkbox" name="q2" value="A"> 💬 Open communication</label>
+                <label class="option"><input type="checkbox" name="q2" value="B"> 👨‍👩‍👧‍👦 Family</label>
+                <label class="option"><input type="checkbox" name="q2" value="C"> ⏰ Quality time</label>
+                <label class="option"><input type="checkbox" name="q2" value="D"> 💰 Money</label>
+                <label class="option"><input type="checkbox" name="q2" value="E"> 🌙 Alone time</label>
+            </div>
+
+            <div id="q3" class="question hidden">
+                <h3>3️⃣ What foods do you prefer? (Choose up to 3)</h3>
+                <label class="option"><input type="checkbox" name="q3" value="A"> 🍗 Adobo</label>
+                <label class="option"><input type="checkbox" name="q3" value="B"> 🐷 Lechon</label>
+                <label class="option"><input type="checkbox" name="q3" value="C"> 🥩 Bandeja Paisa</label>
+                <label class="option"><input type="checkbox" name="q3" value="D"> 🌽 Arepas</label>
+                <label class="option"><input type="checkbox" name="q3" value="E"> 🥄 Borscht</label>
+                <label class="option"><input type="checkbox" name="q3" value="F"> 🥟 Varenyky</label>
+                <label class="option"><input type="checkbox" name="q3" value="G"> 🍜 Pad Thai</label>
+                <label class="option"><input type="checkbox" name="q3" value="H"> 🍲 Tom Yum Goong</label>
+            </div>
+
+            <div id="q4" class="question hidden">
+                <h3>4️⃣ What feature do you find attractive?</h3>
+                <label class="option"><input type="radio" name="q4" value="A"> 📏 Petite</label>
+                <label class="option"><input type="radio" name="q4" value="B"> 💪 Fit body</label>
+                <label class="option"><input type="radio" name="q4" value="C"> 👁️ Small eyes</label>
+                <label class="option"><input type="radio" name="q4" value="D"> ⚪ White complexion</label>
+            </div>
+
+            <div id="q5" class="question hidden">
+                <h3>5️⃣ Which activity can you relate to more?</h3>
+                <label class="option"><input type="radio" name="q5" value="A"> 🏋️ Working out</label>
+                <label class="option"><input type="radio" name="q5" value="B"> 🎤 Karaoke</label>
+                <label class="option"><input type="radio" name="q5" value="C"> 🛍️ Shopping</label>
+                <label class="option"><input type="radio" name="q5" value="D"> 🛀 Self-care</label>
+            </div>
+            
+            <button type="button" onclick="nextQuestion()" id="nextBtn">Next →</button>
+            <button type="submit" id="submitBtn" style="display:none; background: linear-gradient(135deg, #ed8936, #dd6b20);">🎉 Get Your Results</button>
+        </form>
+        
+        <div id="results"></div>
+    </div>
+    
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+        }
+
+        function nextQuestion() {
+            const currentQ = document.getElementById(`q${currentQuestion}`);
+            const nextQNum = currentQuestion + 1;
+            
+            // Check if current question answered
+            let answered = false;
+            if (currentQuestion === 2 || currentQuestion === 3) {
+                answered = document.querySelectorAll(`input[name="q${currentQuestion}"]:checked`).length > 0;
+            } else {
+                answered = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+            }
+            
+            if (!answered) {
+                alert(`Please answer question ${currentQuestion} first!`);
+                return;
+            }
+            
+            // Validate max 3 for Q2 and Q3
+            if ((currentQuestion === 2 || currentQuestion === 3) && 
+                document.querySelectorAll(`input[name="q${currentQuestion}"]:checked`).length > 3) {
+                alert(`Please select 3 or fewer options for question ${currentQuestion}.`);
+                return;
+            }
+            
+            currentQ.classList.add('hidden');
+            if (nextQNum <= totalQuestions) {
+                document.getElementById(`q${nextQNum}`).classList.remove('hidden');
+                currentQuestion = nextQNum;
+                updateProgress();
+            }
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            }
+        }
+
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateResults();
+        });
+
+        function calculateResults() {
+            let scores = { Filipina: 0, Thai: 0, Ukrainian: 0, Latina: 0 };
+            
+            // Q1: Ideal date (radio)
+            const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+            if (q1 === 'A') { 
+                scores.Filipina++; scores.Thai++; scores.Ukrainian++; scores.Latina++; 
+            }
+            else if (q1 === 'B') { 
+                scores.Thai++; scores.Ukrainian++; scores.Latina++; 
+            }
+            else if (q1 === 'C') { 
+                scores.Filipina++; scores.Thai++; scores.Latina++; 
+            }
+            else if (q1 === 'D') { 
+                scores.Filipina++; scores.Ukrainian++; scores.Latina++; 
+            }
+            
+            // Q2: Relationship priorities (checkboxes, up to 3)
+            const q2Answers = Array.from(document.querySelectorAll('input[name="q2"]:checked')).map(cb => cb.value);
+            q2Answers.forEach(ans => {
+                if (ans === 'A') { scores.Ukrainian++; scores.Latina++; }
+                else if (ans === 'B') { scores.Filipina++; scores.Thai++; scores.Ukrainian++; scores.Latina++; }
+                else if (ans === 'C') { scores.Filipina++; scores.Thai++; scores.Ukrainian++; }
+                else if (ans === 'D') { scores.Filipina++; scores.Latina++; }
+                else if (ans === 'E') { scores.Thai++; }
+            });
+            
+            // Q3: Food preferences (checkboxes, up to 3) - NEW
+            const q3Answers = Array.from(document.querySelectorAll('input[name="q3"]:checked')).map(cb => cb.value);
+            q3Answers.forEach(ans => {
+                if (ans === 'A' || ans === 'B') scores.Filipina++;
+                else if (ans === 'C' || ans === 'D') scores.Latina++;
+                else if (ans === 'E' || ans === 'F') scores.Ukrainian++;
+                else if (ans === 'G' || ans === 'H') scores.Thai++;
+            });
+            
+            // Q4: Attractive feature (radio - single choice)
+            const q4 = document.querySelector('input[name="q4"]:checked')?.value;
+            if (q4 === 'A') scores.Filipina++;
+            else if (q4 === 'B') scores.Latina++;
+            else if (q4 === 'C') scores.Thai++;
+            else if (q4 === 'D') scores.Ukrainian++;
+            
+            // Q5: Activity preference (radio)
+            const q5 = document.querySelector('input[name="q5"]:checked')?.value;
+            if (q5 === 'A') scores.Latina++;
+            else if (q5 === 'B') scores.Filipina++;
+            else if (q5 === 'C') scores.Thai++;
+            else if (q5 === 'D') scores.Ukrainian++;
+            
+            // Find highest score
+            let maxScore = 0;
+            let bestMatch = '';
+            for (let type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    bestMatch = type;
+                }
+            }
+            
+            document.getElementById('quizForm').style.display = 'none';
+            document.getElementById('results').innerHTML = `
+                <div style="font-size: 1.4em; margin-bottom: 15px;">
+                    🎉 You are most compatible with a <strong>${bestMatch}</strong>!
+                </div>
+                <div style="opacity: 0.9; font-size: 1.1em; margin-bottom: 20px;">
+                    Scores: Filipina ${scores.Filipina} | Thai ${scores.Thai} | 
+                    Ukrainian ${scores.Ukrainian} | Latina ${scores.Latina}
+                </div>
+                <button onclick="location.reload()" style="background: linear-gradient(135deg, #ed8936, #dd6b20);">
+                    🔄 Take Quiz Again
+                </button>
+            `;
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        updateProgress();
+    </script>
+</body>
+</html>
