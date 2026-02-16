@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compatibility Quiz</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("H6_3lY78NbSkIDlq8");  // ← REPLACE WITH YOUR EMAILJS PUBLIC KEY
+        })();
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 100%; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: #333;
+        }
+        .quiz-container {
+            background: white; border-radius: 20px; padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;
+        }
+        h1 { text-align: center; color: #4a5568; margin-bottom: 10px; font-size: 1.8em; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 30px; font-size: 1.1em; }
+        .question { margin-bottom: 25px; }
+        .question h3 { color: #2d3748; margin-bottom: 15px; font-size: 1.3em; }
+        .option { display: block; margin: 10px 0; padding: 12px 15px; border: 2px solid #e2e8f0;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s; background: #f7fafc; }
+        .option:hover { border-color: #4299e1; background: #ebf8ff; transform: translateX(5px); }
+        .option input[type="radio"], .option input[type="checkbox"] { margin-right: 12px; transform: scale(1.2); }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1.1em;
+            font-weight: 600; transition: all 0.2s; margin: 10px 0;
+        }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(72,187,120,0.3); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; background: #a0a0a0 !important; }
+        .email-input { 
+            width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #e2e8f0; 
+            border-radius: 8px; font-size: 1em; box-sizing: border-box;
+        }
+        .email-input:disabled { 
+            background: #f7fafc; cursor: not-allowed; opacity: 0.7;
+        }
+        #results { display: none; text-align: center; font-size: 1.6em; font-weight: bold;
+            padding: 40px 20px; background: linear-gradient(135deg, #48bb78, #38a169); color: white;
+            border-radius: 15px; margin-top: 20px;
+        }
+        .email-section { margin: 25px 0; }
+        .email-section label { display: block; margin-bottom: 8px; font-size: 1.1em; font-weight: 500; }
+        .hidden { display: none; }
+        .progress { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4299e1, #3182ce);
+            width: 20%; transition: width 0.3s;
+        }
+        @media (max-width: 480px) { body { padding: 10px; } .quiz-container { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Compatibility Quiz</h1>
+        <p class="subtitle">Find your perfect international match in 2 minutes</p>
+        
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+        
+        <form id="quizForm">
+            <div id="q1" class="question">
+                <h3>1️⃣ What's your ideal date?</h3>
+                <label class="option"><input type="radio" name="q1" value="A">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/dinner.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Dinner"> Dinner for two
+                </label>
+                <label class="option"><input type="radio" name="q1" value="B">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/club.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Club"> Party at a club
+                </label>
+                <label class="option"><input type="radio" name="q1" value="C">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/movies.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Movie"> Watch movies at home
+                </label>
+                <label class="option"><input type="radio" name="q1" value="D">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/park.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Park"> A walk in the park
+                </label>
+                <button type="button" onclick="nextQuestion()" id="nextBtn1">Next →</button>
+            </div>
+            
+            <div id="q2" class="question hidden">
+                <h3>2️⃣ What's important in a relationship? (Choose up to 3)</h3>
+                <label class="option"><input type="checkbox" name="q2" value="A">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/communication.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="communication"> Open communication
+                </label>
+                <label class="option"><input type="checkbox" name="q2" value="B">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/family.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Family"> Family
+                </label>
+                <label class="option"><input type="checkbox" name="q2" value="C">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/quality%20time.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Quality time"> Quality time
+                </label>
+                <label class="option"><input type="checkbox" name="q2" value="D">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/money.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Money"> Money
+                </label>
+                <label class="option"><input type="checkbox" name="q2" value="E">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/alone%20time.png" 
+                         style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" 
+                         alt="Alone time"> Alone time
+                </label>
+                <button type="button" onclick="nextQuestion()" id="nextBtn2">Next →</button>
+            </div>
+
+            <div id="q3" class="question hidden">
+                <h3>3️⃣ What foods do you prefer? (Choose up to 3)</h3>
+                <!-- q3 options remain the same -->
+                <label class="option"><input type="checkbox" name="q3" value="A">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/adobo.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Adobo"> Adobo
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="B">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/lechon.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Lechon"> Lechon
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="C">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/bandeja%20paisa.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Bandeja Paisa"> Bandeja Paisa
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="D">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/arepas.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Arepas"> Arepas
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="E">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/borscht.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Borscht"> Borscht
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="F">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/varenyky.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Varenyky"> Varenyky
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="G">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/pad%20thai.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Pad Thai"> Pad Thai
+                </label>
+                <label class="option"><input type="checkbox" name="q3" value="H">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/tom%20yum.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Tom Yum Goong"> Tom Yum Goong
+                </label>
+                <button type="button" onclick="nextQuestion()" id="nextBtn3">Next →</button>
+            </div>
+
+            <div id="q4" class="question hidden">
+                <h3>4️⃣ What feature do you find attractive?</h3>
+                <!-- q4 options remain the same -->
+                <label class="option"><input type="radio" name="q4" value="A">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/petite.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Petite"> Petite
+                </label>
+                <label class="option"><input type="radio" name="q4" value="B">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/fit%20body.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Fit body"> Fit body
+                </label>
+                <label class="option"><input type="radio" name="q4" value="C">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/small%20eyes.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Small eyes"> Small eyes
+                </label>
+                <label class="option"><input type="radio" name="q4" value="D">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/white%20complexion.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="White complexion"> White complexion
+                </label>
+                <button type="button" onclick="nextQuestion()" id="nextBtn4">Next →</button>
+            </div>
+
+            <div id="q5" class="question hidden">
+                <h3>5️⃣ Which activity can you relate to more?</h3>
+                <!-- q5 options remain the same -->
+                <label class="option"><input type="radio" name="q5" value="A">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/working%20out.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Working out"> Working out
+                </label>
+                <label class="option"><input type="radio" name="q5" value="B">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/karaoke.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Karaoke"> Karaoke
+                </label>
+                <label class="option"><input type="radio" name="q5" value="C">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/shopping.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Shopping"> Shopping
+                </label>
+                <label class="option"><input type="radio" name="q5" value="D">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/self-care.png" style="width:55px;height:60px;margin-right:8px;vertical-align:middle;" alt="Self-care"> Self-care
+                </label>
+                <button type="button" id="submitBtn" style="display:block; background: linear-gradient(135deg, #ed8936, #dd6b20);" onclick="showResults()">
+                    <img src="https://raw.githubusercontent.com/MikeeeDeee/Quiz/main/results.png" style="width:28px;height:28px;margin-right:10px;vertical-align:middle;" alt="Results"> Get Your Results
+                </button>
+            </div>
+        </form>
+        
+        <div id="results"></div>
+    </div>
+    
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+        }
+
+        function nextQuestion() {
+            const currentQ = document.getElementById(`q${currentQuestion}`);
+            const nextQNum = currentQuestion + 1;
+            
+            // Validation for all questions
+            let checkedCount = document.querySelectorAll(`input[name="q${currentQuestion}"]:checked`).length;
+            let answered = false;
+            
+            if (currentQuestion === 2 || currentQuestion === 3) {
+                // Checkboxes: Need AT LEAST 1 selected
+                answered = checkedCount > 0;
+            } else {
+                // Radio buttons: Need exactly 1 selected
+                answered = checkedCount === 1;
+            }
+            
+            if (!answered) {
+                alert(`Please answer question ${currentQuestion} first!`);
+                return;
+            }
+            
+            // Max 3 checkboxes validation
+            if ((currentQuestion === 2 || currentQuestion === 3) && checkedCount > 3) {
+                alert(`Please select 3 or fewer options for question ${currentQuestion}.`);
+                return;
+            }
+            
+            currentQ.classList.add('hidden');
+            if (nextQNum <= totalQuestions) {
+                document.getElementById(`q${nextQNum}`).classList.remove('hidden');
+                currentQuestion = nextQNum;
+                updateProgress();
+            }
+        }
+
+        function showResults() {
+            calculateResults();
+        }
+
+        function sendMatchmakerEmail() {
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const bestMatch = window.currentBestMatch;
+            
+            if (!userEmail) {
+                alert('Please enter your email first!');
+                return;
+            }
+
+            // Lock UI
+            const matchBtn = document.getElementById('matchBtn');
+            matchBtn.textContent = 'Thank You! ✅';
+            matchBtn.disabled = true;
+            document.getElementById('userEmail').disabled = true;
+
+            // ✅ FIXED: Send to afacebu.miked@gmail.com via EmailJS
+            const templateParams = {
+                best_match: bestMatch,
+                scores: `Filipina: ${window.currentScores.Filipina}, Thai: ${window.currentScores.Thai}, Ukrainian: ${window.currentScores.Ukrainian}, Latina: ${window.currentScores.Latina}`,
+                q1: window.currentQ1 || 'Not answered',
+                q2: window.currentQ2.join(', ') || 'None',
+                q3: window.currentQ3.join(', ') || 'None',
+                q4: window.currentQ4 || 'Not answered',
+                q5: window.currentQ5 || 'Not answered',
+                user_email: userEmail,  // ✅ FIXED: Correct parameter name
+                timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Manila'})
+            };
+
+            emailjs.send('service_en29r0t', 'template_84ryw55', templateParams)
+                .then((result) => {
+                    console.log('✅ Email sent to afacebu.miked@gmail.com!', result.text);
+                    alert('Thank you! Your results have been sent. We will contact you soon!');
+                }, (error) => {
+                    console.log('❌ Email failed:', error.text);
+                    alert('Email failed to send. Please try again or contact us directly.');
+                });
+        }
+
+        function calculateResults() {
+            let scores = { Filipina: 0, Thai: 0, Ukrainian: 0, Latina: 0 };
+            
+            // Store all answers globally
+            window.currentQ1 = document.querySelector('input[name="q1"]:checked')?.value;
+            window.currentQ2 = Array.from(document.querySelectorAll('input[name="q2"]:checked')).map(cb => cb.value);
+            window.currentQ3 = Array.from(document.querySelectorAll('input[name="q3"]:checked')).map(cb => cb.value);
+            window.currentQ4 = document.querySelector('input[name="q4"]:checked')?.value;
+            window.currentQ5 = document.querySelector('input[name="q5"]:checked')?.value;
+            
+            // Calculate scores (same logic as before)
+            const q1 = window.currentQ1;
+            if (q1 === 'A') { scores.Filipina++; scores.Thai++; scores.Ukrainian++; scores.Latina++; }
+            else if (q1 === 'B') { scores.Thai++; scores.Ukrainian++; scores.Latina++; }
+            else if (q1 === 'C') { scores.Filipina++; scores.Thai++; scores.Latina++; }
+            else if (q1 === 'D') { scores.Filipina++; scores.Ukrainian++; scores.Latina++; }
+            
+            window.currentQ2.forEach(ans => {
+                if (ans === 'A') { scores.Ukrainian++; scores.Latina++; }
+                else if (ans === 'B') { scores.Filipina++; scores.Thai++; scores.Ukrainian++; scores.Latina++; }
+                else if (ans === 'C') { scores.Filipina++; scores.Thai++; scores.Ukrainian++; }
+                else if (ans === 'D') { scores.Filipina++; scores.Latina++; }
+                else if (ans === 'E') { scores.Thai++; }
+            });
+            
+            window.currentQ3.forEach(ans => {
+                if (ans === 'A' || ans === 'B') scores.Filipina++;
+                else if (ans === 'C' || ans === 'D') scores.Latina++;
+                else if (ans === 'E' || ans === 'F') scores.Ukrainian++;
+                else if (ans === 'G' || ans === 'H') scores.Thai++;
+            });
+            
+            const q4 = window.currentQ4;
+            if (q4 === 'A') scores.Filipina++;
+            else if (q4 === 'B') scores.Latina++;
+            else if (q4 === 'C') scores.Thai++;
+            else if (q4 === 'D') scores.Ukrainian++;
+            
+            const q5 = window.currentQ5;
+            if (q5 === 'A') scores.Latina++;
+            else if (q5 === 'B') scores.Filipina++;
+            else if (q5 === 'C') scores.Thai++;
+            else if (q5 === 'D') scores.Ukrainian++;
+            
+            // Find best match
+            let maxScore = 0;
+            let bestMatch = '';
+            for (let type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    bestMatch = type;
+                }
+            }
+            
+            window.currentBestMatch = bestMatch;
+            window.currentScores = scores;
+            
+            // Show results
+            document.getElementById('quizForm').style.display = 'none';
+            document.getElementById('results').innerHTML = `
+                <div style="font-size: 1.4em; margin-bottom: 15px;">
+                    🎉 You are most compatible with a <strong>${bestMatch}</strong>!
+                </div>
+                <div style="opacity: 0.9; font-size: 1.1em; margin-bottom: 20px;">
+                    Scores: Filipina ${scores.Filipina} | Thai ${scores.Thai} | 
+                    Ukrainian ${scores.Ukrainian} | Latina ${scores.Latina}
+                </div>
+                <div class="email-section">
+                    <label>Enter your email if you want to match with a <strong>${bestMatch}</strong> woman:</label>
+                    <input type="email" id="userEmail" class="email-input" placeholder="your@email.com">
+                    <button id="matchBtn" onclick="sendMatchmakerEmail()" style="background: linear-gradient(135deg, #ed8936, #dd6b20); margin-top: 10px;">
+                        Match Me Now!
+                    </button>
+                </div>
+                <button onclick="location.reload();" style="background: linear-gradient(135deg, #4299e1, #3182ce);">
+                    🔄 Take Quiz Again
+                </button>
+            `;
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        updateProgress();
+    </script>
+</body>
+</html>
