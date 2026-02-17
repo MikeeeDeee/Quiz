@@ -362,41 +362,39 @@ function updateProgress() {
         }
 
         function sendMatchmakerEmail() {
-            const userEmail = document.getElementById('userEmail').value.trim();
-            const bestMatch = window.currentBestMatch;
-            
-            if (!userEmail) {
-                alert('Please enter your email first!');
-                return;
-            }
+    const userEmail = document.getElementById('userEmail').value.trim();
+    const bestMatch = window.currentBestMatch;
+    
+    if (!userEmail) {
+        return;  // Silent fail, no alert
+    }
 
-            const matchBtn = document.getElementById('matchBtn');
-            matchBtn.textContent = 'Thank You! ✅';
-            matchBtn.disabled = true;
-            document.getElementById('userEmail').disabled = true;
+    const matchBtn = document.getElementById('matchBtn');
+    matchBtn.textContent = 'Thank You! ✅';
+    matchBtn.disabled = true;
+    document.getElementById('userEmail').disabled = true;
 
-            const templateParams = {
-                best_match: bestMatch,
-                scores: `Filipina: ${window.currentScores.Filipina}, Thai: ${window.currentScores.Thai}, Ukrainian: ${window.currentScores.Ukrainian}, Latina: ${window.currentScores.Latina}`,
-                q1: window.currentQ1 || 'Not answered',
-                q2: window.currentQ2.join(', ') || 'None',
-                q3: window.currentQ3.join(', ') || 'None',
-                q4: window.currentQ4 || 'Not answered',
-                q5: window.currentQ5 || 'Not answered',
-                q6: window.currentQ6 || 'Not answered',
-                user_email: userEmail,
-                timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Manila'})
-            };
+    const templateParams = {
+        best_match: bestMatch,
+        scores: `Filipina: ${window.currentScores.Filipina}, Thai: ${window.currentScores.Thai}, Ukrainian: ${window.currentScores.Ukrainian}, Latina: ${window.currentScores.Latina}`,
+        q1: window.currentQ1 || 'Not answered',
+        q2: window.currentQ2.join(', ') || 'None',
+        q3: window.currentQ3.join(', ') || 'None',
+        q4: window.currentQ4 || 'Not answered',
+        q5: window.currentQ5 || 'Not answered',
+        q6: window.currentQ6 || 'Not answered',
+        user_email: userEmail,
+        timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Manila'})
+    };
 
-            emailjs.send('service_en29r0t', 'template_84ryw55', templateParams)
-    .then((result) => {
-        console.log('✅ Email sent!', result.text);
-        // Silent success - button already shows "Thank You! ✅"
-    }, (error) => {
-        console.log('❌ Email failed:', error.text);
-        // Silent fail - button still shows "Thank You! ✅"
-    });
-        }
+    emailjs.send('service_en29r0t', 'template_84ryw55', templateParams)
+        .then((result) => {
+            console.log('✅ Email sent silently');
+        })
+        .catch((error) => {
+            console.log('❌ Email error (silent):', error);
+        });
+}
 
         function calculateResults() {
             let scores = { Filipina: 0, Thai: 0, Ukrainian: 0, Latina: 0 };
@@ -493,4 +491,5 @@ function updateProgress() {
     </script>
 </body>
 </html>
+
 
