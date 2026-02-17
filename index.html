@@ -389,13 +389,13 @@ function updateProgress() {
             };
 
             emailjs.send('service_en29r0t', 'template_84ryw55', templateParams)
-                .then((result) => {
-                    console.log('✅ Email sent!', result.text);
-                    alert('Thank you! Your results have been sent. We will contact you soon!');
-                }, (error) => {
-                    console.log('❌ Email failed:', error.text);
-                    alert('Email failed to send. Please try again or contact us directly.');
-                });
+    .then((result) => {
+        console.log('✅ Email sent!', result.text);
+        // Silent success - button already shows "Thank You! ✅"
+    }, (error) => {
+        console.log('❌ Email failed:', error.text);
+        // Silent fail - button still shows "Thank You! ✅"
+    });
         }
 
         function calculateResults() {
@@ -493,3 +493,4 @@ function updateProgress() {
     </script>
 </body>
 </html>
+
